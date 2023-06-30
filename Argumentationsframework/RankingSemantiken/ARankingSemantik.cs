@@ -1,5 +1,7 @@
 ﻿using Argumentationsframework.AFModul;
+using Argumentationsframework.Extensions;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Argumentationsframework.RankingSemantiken
 {
@@ -26,16 +28,37 @@ namespace Argumentationsframework.RankingSemantiken
     #endregion .............................................................................................................
     #region Oeffentliche Methoden ..........................................................................................
 
+    public void BerechneAlleKnoten()
+    {
+      foreach (Knoten knoten in this._af.Knoten)
+      {
+        this.BerechneKnoten(knoten.Name);
+      }
+    }
+
+
     public abstract T BerechneKnoten(string name);
 
     public virtual void PrintToConsole(string startsWith = "")
     {
+      List<KeyValuePair<string, T>> kvpListe = this._knotenwerte.Where(k => k.Key.StartsWith(startsWith)).ToList();
+      List<string> knotenNamen = new();
+      foreach (KeyValuePair<string, T> kvp in kvpListe)
+      {
+        knotenNamen.Add(kvp.Key);
+      }
+      knotenNamen.Sort();
+
       Console.WriteLine();
       Console.WriteLine($"========== {this.GetType().Name} ==========");
-      foreach (KeyValuePair<string, T> knotenwert in this._knotenwerte.Where(k => k.Key.StartsWith(startsWith)) ?? Enumerable.Empty<KeyValuePair<string, T>>())
+      foreach (string namen in knotenNamen)
       {
-        Console.WriteLine($"{knotenwert.Key}: {knotenwert.Value}");
+        Console.WriteLine($"{namen}: {this._knotenwerte[namen]}");
       }
+      //foreach (KeyValuePair<string, T> knotenwert in this._knotenwerte.Where(k => k.Key.StartsWith(startsWith)) ?? Enumerable.Empty<KeyValuePair<string, T>>())
+      //{
+      //  Console.WriteLine($"{knotenwert.Key}: {knotenwert.Value}");
+      //}
 
     }
 

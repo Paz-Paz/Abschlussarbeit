@@ -2,6 +2,8 @@
 using Argumentationsframework.Extensions;
 using Argumentationsframework.Extensions.AdmissibleModul;
 using Argumentationsframework.Extensions.InitialSetModul;
+using Argumentationsframework.RankingSemantiken;
+using Argumentationsframework.RankingSemantiken.CategorizerModul;
 
 namespace Argumentationsframework
 {
@@ -34,29 +36,46 @@ namespace Argumentationsframework
       //.AddAngriff("g", "h")
       //.AddAngriff("h", "f");
 
+      int anzahlKnoten = 100;
+      af = new AF();
+      for (int i = 0; i < anzahlKnoten + 1; i++)
+      {
+        af.AddAngriff(NummerZuName(i, anzahlKnoten), NummerZuName(i + 1, anzahlKnoten));
+      }
 
-      af = new AF()
-      .AddKnoten("a")
-      .AddKnoten("b1")
-      .AddKnoten("b2")
-      .AddKnoten("c")
-      .AddKnoten("d")
-      .AddKnoten("e")
-      .AddKnoten("f")
-      .AddAngriff("a", "b1")
-      .AddAngriff("a", "b2")
-      .AddAngriff("b1", "c")
-      .AddAngriff("b2", "c")
-      .AddAngriff("c", "d")
-      .AddAngriff("c", "e")
-      .AddAngriff("d", "a")
-      .AddAngriff("e", "f");
+      af.AddAngriff("b", NummerZuName(anzahlKnoten / 2, anzahlKnoten));
 
-      List<KnotenSet> a = af.GetAdmissibleExtensions();
-      af.PrintToConsole(a, "Admisible");
+      IRankingSemantik categorizer = new Categorizer2(af);
+      categorizer.BerechneAlleKnoten();
+      categorizer.PrintToConsole();
 
-      List<KnotenSet> b = af.GetInitialSet();
-      af.PrintToConsole(b, "Initial Set");
+
+      categorizer = new Categorizer(af);
+      categorizer.BerechneAlleKnoten();
+      categorizer.PrintToConsole();
+
+      //af = new AF()
+      //.AddKnoten("a")
+      //.AddKnoten("b1")
+      //.AddKnoten("b2")
+      //.AddKnoten("c")
+      //.AddKnoten("d")
+      //.AddKnoten("e")
+      //.AddKnoten("f")
+      //.AddAngriff("a", "b1")
+      //.AddAngriff("a", "b2")
+      //.AddAngriff("b1", "c")
+      //.AddAngriff("b2", "c")
+      //.AddAngriff("c", "d")
+      //.AddAngriff("c", "e")
+      //.AddAngriff("d", "a")
+      //.AddAngriff("e", "f");
+
+      //List<KnotenSet> a = af.GetAdmissibleExtensions();
+      //af.PrintToConsole(a, "Admisible");
+
+      //List<KnotenSet> b = af.GetInitialSet();
+      //af.PrintToConsole(b, "Initial Set");
 
 
 
@@ -64,6 +83,14 @@ namespace Argumentationsframework
 
       Console.WriteLine("[ENTER] beendet...");
       Console.ReadLine();
+    }
+
+    private static string NummerZuName(in int nummer, in int maxNummer)
+    {
+      int laenge = maxNummer.ToString().Length;
+      string  nummerString = nummer.ToString();
+      string  name = $"a{nummerString.PadLeft(laenge, '0')}";
+      return name;
     }
   }
 }
